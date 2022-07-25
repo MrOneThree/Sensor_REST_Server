@@ -17,8 +17,8 @@ public class SensorService {
         this.repo = repo;
     }
 
-    public Sensor findByName(String name){
-        return repo.findByName(name).orElseThrow(() -> new SensorNotFoundException("Sensor with name "+ name + " not found."));
+    public Boolean existsSensorByName(String name){
+        return repo.existsSensorByName(name);
     }
 
     @Transactional
