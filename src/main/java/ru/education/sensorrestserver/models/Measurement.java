@@ -1,6 +1,9 @@
 package ru.education.sensorrestserver.models;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -11,10 +14,11 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Measurement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long measurement_id;
 
     @NotEmpty(message = "Measurement value should not be empty")
     @Min(value = (-100), message = "Minimal measurement value is -100")
@@ -30,6 +34,5 @@ public class Measurement {
     @ManyToOne(optional = false)
     @JoinColumn(name = "sensor_id", nullable = false)
     private Sensor sensor;
-
 
 }

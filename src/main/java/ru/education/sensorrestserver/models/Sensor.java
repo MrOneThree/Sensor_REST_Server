@@ -11,10 +11,11 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Sensor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long sensor_id;
 
     @Column(nullable = false, unique = true)
     @NotEmpty(message = "Sensor name should not be empty")
