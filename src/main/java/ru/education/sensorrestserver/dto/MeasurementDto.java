@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class MeasurementDto {
     @Min(value = (-100), message = "Minimal measurement value is -100")
-    @Max(value = (100), message = "Maximal measurement value is 100")
+    @Max(value = (100), message = "Maximum measurement value is 100")
     @NotNull(message = "value should not be empty")
     private Double value;
     @NotNull(message = "raining check should not be empty")
