@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface SensorRepo extends JpaRepository<Sensor, Long> {
     Boolean existsSensorByName(String name);
+
+    Optional<Sensor> findByName(String name);
 }

@@ -8,9 +8,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ru.education.sensorrestserver.dto.MeasurementDto;
+import ru.education.sensorrestserver.exceptions.measurement.MeasurementErrorResponse;
 import ru.education.sensorrestserver.exceptions.measurement.MeasurementNotCreatedException;
 import ru.education.sensorrestserver.models.Measurement;
 import ru.education.sensorrestserver.services.MeasurementsService;
+import ru.education.sensorrestserver.services.SensorService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -20,11 +22,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/measurements")
 public class MeasurementController {
     private final MeasurementsService measurementsService;
+    private final SensorService sensorService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public MeasurementController(MeasurementsService measurementsService, ModelMapper modelMapper) {
+    public MeasurementController(MeasurementsService measurementsService, SensorService sensorService, ModelMapper modelMapper) {
         this.measurementsService = measurementsService;
+        this.sensorService = sensorService;
         this.modelMapper = modelMapper;
     }
 
@@ -64,7 +68,16 @@ public class MeasurementController {
     }
 
     @ExceptionHandler
+    private ResponseEntity<MeasurementErrorResponse> handleException(MeasurementNotCreatedException e){
+        MeasurementErrorResponse response = new MeasurementErrorResponse(
+                e.getMessage(),
+                System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
     private void enrichMeasurement(Measurement measurement){
         measurement.setTimestamp(System.currentTimeMillis());
+        measurement.setSensor(sensorService.findSensorByName(measurement.getSensor().getName()));
     }
 }
