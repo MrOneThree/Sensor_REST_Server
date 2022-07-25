@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -20,12 +21,14 @@ public class Measurement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long measurement_id;
 
-    @NotEmpty(message = "Measurement value should not be empty")
+    @NotNull(message = "Measurement value should not be empty")
     @Min(value = (-100), message = "Minimal measurement value is -100")
     @Max(value = (100), message = "Maximal measurement value is 100")
+    @Column(nullable = false)
     private Double value;
 
-    @NotEmpty(message = "raining should not be empty")
+    @NotNull(message = "raining should not be empty")
+    @Column(nullable = false)
     private Boolean raining;
 
 
