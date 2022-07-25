@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.education.sensorrestserver.dto.MeasurementDto;
 import ru.education.sensorrestserver.exceptions.measurement.MeasurementErrorResponse;
 import ru.education.sensorrestserver.exceptions.measurement.MeasurementNotCreatedException;
+import ru.education.sensorrestserver.exceptions.sensor.SensorErrorResponse;
+import ru.education.sensorrestserver.exceptions.sensor.SensorNotFoundException;
 import ru.education.sensorrestserver.models.Measurement;
 import ru.education.sensorrestserver.services.MeasurementsService;
 import ru.education.sensorrestserver.services.SensorService;
@@ -48,6 +50,12 @@ public class MeasurementController {
     public ResponseEntity<HttpStatus> addMeasurement(@RequestBody @Valid MeasurementDto measurementDto,
                                                      BindingResult bindingResult){
 
+        Measurement measurement = modelMapper.map(measurementDto, Measurement.class);
+
+        if (measurement.getSensor() == null)
+            throw new SensorNotFoundException("Requested Sensor has not been found");
+
+
         if (bindingResult.hasErrors()){
             StringBuilder errorMsg = new StringBuilder();
 
@@ -59,7 +67,6 @@ public class MeasurementController {
             }
             throw new MeasurementNotCreatedException(errorMsg.toString());
         }
-        Measurement measurement = modelMapper.map(measurementDto, Measurement.class);
 
         enrichMeasurement(measurement);
         measurementsService.save(measurement);
@@ -70,6 +77,14 @@ public class MeasurementController {
     @ExceptionHandler
     private ResponseEntity<MeasurementErrorResponse> handleException(MeasurementNotCreatedException e){
         MeasurementErrorResponse response = new MeasurementErrorResponse(
+                e.getMessage(),
+                System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler
+    private ResponseEntity<SensorErrorResponse> handleException(SensorNotFoundException e){
+        SensorErrorResponse response = new SensorErrorResponse(
                 e.getMessage(),
                 System.currentTimeMillis()
         );
