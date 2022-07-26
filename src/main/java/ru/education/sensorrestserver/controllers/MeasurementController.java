@@ -15,6 +15,7 @@ import ru.education.sensorrestserver.exceptions.sensor.SensorNotFoundException;
 import ru.education.sensorrestserver.models.Measurement;
 import ru.education.sensorrestserver.services.MeasurementsService;
 import ru.education.sensorrestserver.services.SensorService;
+import ru.education.sensorrestserver.utils.Clock;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -26,12 +27,14 @@ public class MeasurementController {
     private final MeasurementsService measurementsService;
     private final SensorService sensorService;
     private final ModelMapper modelMapper;
+    private final Clock clock;
 
     @Autowired
-    public MeasurementController(MeasurementsService measurementsService, SensorService sensorService, ModelMapper modelMapper) {
+    public MeasurementController(MeasurementsService measurementsService, SensorService sensorService, ModelMapper modelMapper, Clock clock) {
         this.measurementsService = measurementsService;
         this.sensorService = sensorService;
         this.modelMapper = modelMapper;
+        this.clock = clock;
     }
 
     @GetMapping
@@ -68,7 +71,7 @@ public class MeasurementController {
             throw new MeasurementNotCreatedException(errorMsg.toString());
         }
 
-        enrichMeasurement(measurement);
+        enrichMeasurement(measurement, clock);
         measurementsService.save(measurement);
 
         return ResponseEntity.ok(HttpStatus.OK);
@@ -91,8 +94,8 @@ public class MeasurementController {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    private void enrichMeasurement(Measurement measurement){
-        measurement.setTimestamp(System.currentTimeMillis());
+    private void enrichMeasurement(Measurement measurement, Clock clock){
+        measurement.setTimestamp(clock.getCurrentTimeMillis());
         measurement.setSensor(sensorService.findSensorByName(measurement.getSensor().getName()));
     }
 }
