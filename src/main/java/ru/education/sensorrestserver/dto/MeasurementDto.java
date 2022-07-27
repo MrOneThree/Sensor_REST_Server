@@ -20,4 +20,5 @@ public class MeasurementDto {
     private Boolean raining;
     @NotNull(message = "Sensor is empty")
     private SensorDto sensor;
+    private long timestamp;
 }
