@@ -88,7 +88,6 @@ class MeasurementControllerTest {
 
         String uri = "/measurements/add";
         String jsonRequest ="{\"value\": -101.0,\"raining\": false,\"sensor\":{\"name\": \"Second Sensor\"}}";
-             //   "{\"value\": 101.0,\"raining\": false,\"sensor\":{\"name\": \"Second Sensor\"}}";
 
         underTest.perform(MockMvcRequestBuilders.post(uri)
                         .contentType(MediaType.APPLICATION_JSON)
