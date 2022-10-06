@@ -1,6 +1,9 @@
 package ru.education.sensorrestserver.models;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -12,6 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "sensors")
 public class Sensor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
