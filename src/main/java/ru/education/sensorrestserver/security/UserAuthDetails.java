@@ -9,13 +9,7 @@ import java.util.Collection;
 /**
  * @author Kirill Popov
  */
-public class UserAuthDetails implements UserDetails {
-
-    private final User user;
-
-    public UserAuthDetails(User user) {
-        this.user = user;
-    }
+public record UserAuthDetails(User user) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -50,9 +44,5 @@ public class UserAuthDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public User getUser() {
-        return this.user;
     }
 }
